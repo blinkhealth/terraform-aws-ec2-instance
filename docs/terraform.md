@@ -19,6 +19,8 @@
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | additional\_ips\_count | Count of additional EIPs | `number` | `0` | no |
+| additional\_private\_ips | List of private IPs to attach to the private ENI | `list(string)` | `[]` | no |
+| additional\_private\_ips\_count | Count of additional private IPs | `number` | `0` | no |
 | additional\_tag\_map | Additional tags for appending to tags\_as\_list\_of\_maps. Not added to `tags`. | `map(string)` | `{}` | no |
 | allowed\_ports | List of allowed ingress TCP ports | `list(number)` | `[]` | no |
 | allowed\_ports\_udp | List of allowed ingress UDP ports | `list(number)` | `[]` | no |
@@ -81,6 +83,7 @@
 | Name | Description |
 |------|-------------|
 | additional\_eni\_ids | Map of ENI to EIP |
+| additional\_private\_eni\_ids | Map of ENI to EIP |
 | alarm | CloudWatch Alarm ID |
 | arn | ARN of the instance |
 | ebs\_ids | IDs of EBSs |
