@@ -50,3 +50,23 @@ resource "aws_network_interface" "additional_private" {
 
   tags = module.this.tags
 }
+
+resource "aws_network_interface" "primary" {
+  subnet_id  = var.subnet
+  private_ip = var.private_ip
+
+  ipv6_address_count = var.ipv6_address_count < 0 ? null : var.ipv6_address_count
+  ipv6_addresses     = length(var.ipv6_addresses) == 0 ? null : var.ipv6_addresses
+  source_dest_check  = var.source_dest_check
+
+  security_groups = compact(
+    concat(
+      [
+        var.create_default_security_group ? join("", aws_security_group.default.*.id) : ""
+      ],
+      var.security_groups
+    )
+  )
+
+  tags = module.this.tags
+}
