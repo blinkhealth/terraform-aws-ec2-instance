@@ -99,38 +99,29 @@ resource "aws_iam_role" "default" {
 }
 
 resource "aws_instance" "default" {
-  count                       = local.instance_count
-  ami                         = local.ami
-  availability_zone           = local.availability_zone
-  instance_type               = var.instance_type
-  ebs_optimized               = var.ebs_optimized
-  disable_api_termination     = var.disable_api_termination
-  user_data                   = var.user_data
-  user_data_base64            = var.user_data_base64
-  iam_instance_profile        = local.instance_profile
-  associate_public_ip_address = var.associate_public_ip_address
-  key_name                    = var.ssh_key_pair
-  subnet_id                   = var.subnet
-  monitoring                  = var.monitoring
-  private_ip                  = var.private_ip
-  source_dest_check           = var.source_dest_check
-  ipv6_address_count          = var.ipv6_address_count < 0 ? null : var.ipv6_address_count
-  ipv6_addresses              = length(var.ipv6_addresses) == 0 ? null : var.ipv6_addresses
-
-  vpc_security_group_ids = compact(
-    concat(
-      [
-        var.create_default_security_group ? join("", aws_security_group.default.*.id) : "",
-      ],
-      var.security_groups
-    )
-  )
+  count                   = local.instance_count
+  ami                     = local.ami
+  availability_zone       = local.availability_zone
+  instance_type           = var.instance_type
+  ebs_optimized           = var.ebs_optimized
+  disable_api_termination = var.disable_api_termination
+  user_data               = var.user_data
+  user_data_base64        = var.user_data_base64
+  iam_instance_profile    = local.instance_profile
+  key_name                = var.ssh_key_pair
+  monitoring              = var.monitoring
 
   root_block_device {
     volume_type           = local.root_volume_type
     volume_size           = var.root_volume_size
     iops                  = local.root_iops
     delete_on_termination = var.delete_on_termination
+  }
+
+  network_interface {
+    device_index          = 0
+    network_interface_id  = aws_network_interface.primary.id
+    delete_on_termination = false
   }
 
   tags = module.this.tags
